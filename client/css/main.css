@@ -1,0 +1,5 @@
+/* Main - Body */
+body {
+    padding-top: 70px; /* Prevents fixed navbar from covering content */
+}
+

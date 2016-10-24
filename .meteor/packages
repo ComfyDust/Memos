@@ -25,3 +25,7 @@ twbs:bootstrap
 useraccounts:iron-routing
 useraccounts:bootstrap
 accounts-password
+mdg:validated-method
+
+
+prosemeteor:prosemirror

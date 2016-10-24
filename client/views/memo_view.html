@@ -1,0 +1,41 @@
+<!-- Memo view template -->
+
+<!-- Top level memo view template -->
+<template name="memo_view">
+	<div id="memo_view" class="container">
+		{{> memo_view_metadata}}
+		{{> memo_view_content_editor}}
+	</div>
+</template>
+
+<!-- Memo view metadata bar -->
+<template name="memo_view_metadata">
+	<div id="memo_view_metadata" class="container">
+		Memo Name: {{memo_name}}
+	</div>
+</template>
+
+<!-- Memo view permissions modal -->
+<template name="memo_view_permissions">
+	<div id="memo_view_permissions" class="container">
+	</div>
+</template>
+
+<!-- Memo view content - Main -->
+<template name="memo_view_content">
+	<div id="memo_view_content" class="container">
+	</div>
+</template>
+
+<!-- Memo view content - Render -->
+<template name="memo_view_content_render">
+	<div id="memo_view_content_render" class="container">
+	</div>
+</template>
+
+<!-- Memo view content - Editor -->
+<template name="memo_view_content_editor">
+	<div id="memo_view_content_editor" class="container">
+		<div id="memo_editor"></div>
+	</div>
+</template>

@@ -1,0 +1,72 @@
+<!-- Memo list template -->
+
+<!-- Top level memo list template -->
+<template name="memo_list">
+	<div class="container">
+		My Memos:<br>
+		{{#each my_memos}}
+		<a href="/memos/{{memo_name}}">{{memo_name}}</a><br>
+		{{/each}}
+		+ <a class="js-show-new-memo-modal" href="#">New Memo</a> {{> new_memo_modal}}
+	</div>
+</template>
+
+<!-- Memo list selection bar -->
+<template name="memo_list_selection">
+	<div class="container">
+	</div>
+</template>
+
+<!-- Memo list view - Main -->
+<template name="memo_list_view">
+	<div class="container">
+	</div>
+</template>
+
+<!-- Memo list view - Icons -->
+<template name="memo_list_view_icons">
+	<div class="container">
+	</div>
+</template>
+
+<!-- Memo list view - Details -->
+<template name="memo_list_view_details">
+	<div class="container">
+	</div>
+</template>
+
+<!-- Memo list view - New Memo Modal -->
+<template name="new_memo_modal">
+	<div id="new_memo_modal" class="modal fade">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<form id="new_memo_form">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+						<h4 class="modal-title">New Memo</h4>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label class="control-label" for="input_memo_name">Name</label>
+							<input class="form-control" name="new_memo_name" type="text" aria-describedby="memo_name_help" placeholder="My Memo">
+							<p id="memo_name_description" class="form-text text-muted">
+								Your memo name must be unique and less than 128 characters long.
+							</p>
+							<span id="memo_name_help" class="help-block"></span>
+						</div>
+						<!-- /.form-group -->
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+						<button type="submit" class="btn btn-primary">Create</button>
+					</div>
+				</form>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+</template>

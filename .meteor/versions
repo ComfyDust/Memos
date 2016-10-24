@@ -49,6 +49,7 @@ launch-screen@1.0.12
 livedata@1.0.18
 localstorage@1.0.11
 logging@1.1.15_1
+mdg:validated-method@1.1.0
 meteor@1.2.17_1
 meteor-base@1.0.4
 minifier-css@1.2.14_1
@@ -65,12 +66,14 @@ npm-mongo@2.2.10_1
 observe-sequence@1.0.13
 ordered-dict@1.0.8
 promise@0.8.7
+prosemeteor:prosemirror@0.1.1
 random@1.0.10
 rate-limit@1.0.5
 reactive-dict@1.1.8
 reactive-var@1.0.10
 reload@1.1.10
 retry@1.0.8
+rocketchat:streamer@0.3.5
 routepolicy@1.0.11
 service-configuration@1.0.10
 sha@1.0.8

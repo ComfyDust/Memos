@@ -11,3 +11,6 @@
 //    });
 //});
 
+Meteor.publish("memos", function() {
+    return Memos.find();
+});

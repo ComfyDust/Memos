@@ -1,0 +1,13 @@
+/*
+Package.describe({
+    name: 'memos',
+    version: '0.1.0',
+    summary: 'Collaborative memo organiser.'
+});
+*/
+
+Package.onUse(function(api) {
+    api.use('prosemeteor:prosemirror');
+});
+
+

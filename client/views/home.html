@@ -1,0 +1,12 @@
+<!-- Home template -->
+
+<!-- Top level home template -->
+<template name="home">
+	<div class="container">
+		{{#if currentUser}}
+		  {{> memo_list}}
+		{{else}}
+		  {{> splash}}
+		{{/if}}
+	</div>
+</template>

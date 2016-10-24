@@ -16,3 +16,8 @@
 //    }
 //});
 
+Template.memo_list.helpers({
+    my_memos: function() {
+        return Memos.find({ memo_owner: Meteor.userId() });
+    }
+});
