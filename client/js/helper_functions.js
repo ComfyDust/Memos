@@ -8,6 +8,10 @@
 //    return;
 //});
 
+Template.registerHelper('get_email_address', function(user_id) {
+    return Meteor.users.findOne({_id: user_id}).emails[0].address;
+})
+
 // Template-specific Helper Functions
 
 //Template.template_name.helpers({
@@ -18,6 +22,6 @@
 
 Template.memo_list.helpers({
     my_memos: function() {
-        return Memos.find({ memo_owner: Meteor.userId() });
+        return Memos.find({ memo_owner_id: Meteor.userId() });
     }
 });

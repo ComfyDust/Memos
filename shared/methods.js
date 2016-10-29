@@ -2,6 +2,8 @@
 // Shared - Methods
 ///
 
+import { Accounts } from 'meteor/accounts-base';
+
 Meteor.methods({
     placeHolder: function (dummy_var) {
         console.log("Placeholder function for Meteor methods.");

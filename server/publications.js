@@ -14,3 +14,8 @@
 Meteor.publish("memos", function() {
     return Memos.find();
 });
+
+Meteor.publish("users", function() {
+    return Meteor.users.find({});
+});
+

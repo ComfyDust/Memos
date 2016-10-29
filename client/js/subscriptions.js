@@ -3,4 +3,5 @@
 ///
 
 //Meteor.subscribe("placeholder");
+Meteor.subscribe("users");
 

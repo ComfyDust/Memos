@@ -9,7 +9,7 @@ Template.memo_view_content_editor.rendered = function() {
     
     var memo = Memos.findOne({
         memo_name: memo_name,
-        memo_owner: Meteor.userId()
+        memo_owner_id: Meteor.userId()
     });
     
     let editor1 = new ProseMeteorEditor({
