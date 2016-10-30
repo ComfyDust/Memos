@@ -3,35 +3,174 @@
 <!-- Top level memo list template -->
 <template name="memo_list">
 	<div class="container">
-		My Memos:<br>
-		{{#each my_memos}}
-		<a href="/memos/{{memo_name}}">{{memo_name}}</a><br>
-		{{/each}}
-		+ <a class="js-show-new-memo-modal" href="#">New Memo</a> {{> new_memo_modal}}
+		{{> memo_list_selection}} {{> memo_list_view}}
 	</div>
 </template>
 
 <!-- Memo list selection bar -->
 <template name="memo_list_selection">
 	<div class="container">
+		<div class="row">
+			<div class="col-md-2">
+				<label for="view_selector">View:</label>
+				<select id="view_selector" class="custom-select">
+					<option value="icons">Icons</option>
+					<option value="details">Details</option>
+				</select>
+			</div>
+			<div class="col-md-3">
+				<label for="sort_selector">Sort:</label>
+				<select id="sort_selector" class="custom-select">
+					<option value="memo_name">Name</option>
+					<option value="date_created">Creation Date</option>
+					<option value="date_modified">Modification Date</option>
+					<option value="memo_owner_email">Owner</option>
+				</select>
+			</div>
+		</div>
 	</div>
 </template>
 
 <!-- Memo list view - Main -->
 <template name="memo_list_view">
 	<div class="container">
+		My Memos:<br> {{> memo_list_tag_breadcrumbs}}<br>
+
+		{{#if show_icon_view}}
+		  {{> memo_list_view_icons}}
+		{{/if}} {{#if show_detail_view}}
+		  {{> memo_list_view_details}}
+		{{/if}}
+
+		{{> new_memo_modal}}
+	</div>
+</template>
+
+<!-- Memo list view - Tag Breadcrumbs -->
+<template name="memo_list_tag_breadcrumbs">
+	<div class="container">
+		[PLACEHOLDER: Tag Breadcrumbs]
 	</div>
 </template>
 
 <!-- Memo list view - Icons -->
 <template name="memo_list_view_icons">
 	<div class="container">
+		<!-- Glyphicons provided by http://glyphicons.com/ -->
+		<!-- Tags -->
+		{{#each tags}}
+		<div class="col-md-2">
+			<a href="#">
+				<center>
+					<button type="button" class="btn btn-default btn-lg">
+					  <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>
+					</button><br>
+					{{.}}
+				</center>
+			</a>
+		</div>
+		{{/each}}
+
+		<!-- Memos -->
+		{{#each memos}}
+		<div class="col-md-2">
+			<a href="/memos/{{memo_name}}">
+				<center>
+					<button type="button" class="btn btn-default btn-lg">
+					  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+					</button><br>
+					{{memo_name}}
+				</center>
+			</a>
+		</div>
+		{{/each}}
+
+		<!-- New Memo -->
+		{{#if viewing_owned_memos}}
+		<div class="col-md-2">
+			<a class="js-show-new-memo-modal" href="#">
+				<center>
+					<button type="button" class="btn btn-default btn-lg">
+					  <span class="glyphicon glyphicon glyphicon-plus" aria-hidden="true"></span>
+					</button>
+				</center>
+			</a>
+		</div>
+		{{/if}}
 	</div>
 </template>
 
 <!-- Memo list view - Details -->
 <template name="memo_list_view_details">
 	<div class="container">
+		<!-- Glyphicons provided by http://glyphicons.com/ -->
+		<!-- Header -->
+		<div class="row">
+			<div class="col-md-3">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <!-- Offset for buttons -->
+				Name
+			</div>
+			<div class="col-md-2">
+				Owner
+			</div>
+			<div class="col-md-2">
+				Modification Date
+			</div>
+			<div class="col-md-2">
+				Creation Date
+			</div>
+			<div class="col-md-3">
+				Tags
+			</div>
+		</div>
+
+		<!-- Tags -->
+		{{#each tags}}
+		<div class="row">
+			<div class="col-md-3">
+				<a href="#">
+				  <button type="button" class="btn btn-default btn-sm">
+						<span class="glyphicon glyphicon-tag" aria-hidden="true"></span>
+					</button>
+					{{.}}
+				</a>
+			</div>
+		</div>
+		{{/each}}
+
+		<!-- Memos -->
+		{{#each memos}}
+		<div class="row">
+			<div class="col-md-3">
+				<a href="/memos/{{memo_name}}">
+				  <button type="button" class="btn btn-default btn-sm">
+						<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+					</button>
+					{{memo_name}}
+				</a>
+			</div>
+			<div class="col-md-2">
+				{{memo_owner_email}}
+			</div>
+			<div class="col-md-2">
+				{{date_modified}}
+			</div>
+			<div class="col-md-2">
+				{{date_created}}
+			</div>
+			<div class="col-md-3">
+				{{tags}}
+			</div>
+		</div>
+		{{/each}}
+		
+		<!-- New Memo -->
+		{{#if viewing_owned_memos}}
+		<button type="button" class="btn btn-default btn-sm">
+			<span class="glyphicon glyphicon glyphicon-plus" aria-hidden="true"></span>
+		</button>
+		<a class="js-show-new-memo-modal" href="#">New Memo</a>
+		{{/if}}
 	</div>
 </template>
 

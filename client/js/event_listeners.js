@@ -9,6 +9,20 @@ Template.memo_list.events({
         // Show the New Memo Modal
         $('#new_memo_modal').modal('show');
     },
+    'change #view_selector': function(event) {
+        var target = event.target;
+        
+        // Get the new view
+        var new_view = $(target).val();
+        Session.set("view", new_view);
+    },
+    'change #sort_selector': function(event) {
+        var target = event.target;
+
+        // Get the new sort
+        var new_sort = $(target).val();
+        Session.set("sort", new_sort);
+    },
     'submit #new_memo_form': function (event) {
         var target = event.target;
         event.preventDefault();
@@ -22,12 +36,15 @@ Template.memo_list.events({
             $("#memo_name_help").text("A memo with that name already exists.");
         } else {
             // Insert new memo into collection
+            var user_id = Meteor.userId();
             var new_memo_id = Memos.insert({
                 memo_name: new_memo_name,
-                memo_owner_id: Meteor.userId(),
+                memo_owner_id: user_id,
+                memo_owner_email: Meteor.users.findOne({_id: user_id}).emails[0].address,
                 shared_with: [],
                 tags: [],
-                date_created: new Date()
+                date_created: new Date(),
+                date_modified: new Date()
             });
 
             // Create new Prosemeteor doc
@@ -45,6 +62,7 @@ Template.memo_list.events({
     }
 });
 
+// Memo View event listeners
 Template.memo_view.events({
     'click .js-show-permissions-modal': function (event) {
         $('#permissions_modal').modal('show');
