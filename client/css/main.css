@@ -3,9 +3,30 @@ body {
     padding-top: 70px; /* Prevents fixed navbar from covering content */
 }
 
-/* Memo View */
+/* Memo List */
 #css-pre-breadcrumb {
     /* Formats the forward slash before the breadcrumbs */
     padding: 0 5px;
     color: #ccc;
+}
+
+.tag-icon {
+    margin-bottom: 20px;
+}
+
+.tag-row, .memo-row {
+    margin-top: 3px;
+}
+
+/* Memo View */
+.memo_view_metadata {
+    margin-bottom: 10px;
+}
+
+#tag_input {
+    width: 90px;
+}
+
+#memo_view_content_editor {
+    margin-bottom: 10px;
 }

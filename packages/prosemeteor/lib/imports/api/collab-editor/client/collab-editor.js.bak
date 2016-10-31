@@ -44,11 +44,11 @@ export default class CollabEditor {
         console.error('CollabEditor authority openDoc error:', err);
         // TODO: handle error
       }
-      //console.log(`${this.docId}: CollabEditor opened doc and creating ddp connection to authority url ${authorityUrl}`);
+      console.log(`${this.docId}: CollabEditor opened doc and creating ddp connection to authority url ${authorityUrl}`);
       const streamer = this.streamerManager.get(authorityUrl);
       self.ddpConnection = streamer.ddpConnection;
       self.streamerClient = streamer.streamerClient;
-      //console.log(`${this.docId}: CollabEditor stored ddp connection successfully`);
+      console.log(`${this.docId}: CollabEditor stored ddp connection successfully`);
       // the authority is ready. get the latest doc state
       self.ddpConnection.call('ProseMeteor.latestDocState', {
         docId: self.docId
@@ -57,7 +57,7 @@ export default class CollabEditor {
           console.error(`${this.docId} CollabEditor get latestDocState error: ${err}`);
           // TODO: handle error
         }
-        //console.log(`${this.docId}: CollabEditor got latestDocState: ${JSON.stringify(latestDocState, null, 2)}`);
+        console.log(`${this.docId}: CollabEditor got latestDocState: ${JSON.stringify(latestDocState, null, 2)}`);
 
         // create an editor with the latest state
         self.createEditor(latestDocState);
@@ -72,7 +72,7 @@ export default class CollabEditor {
   * @param {Object} params.docJSON     the doc's state represented as JS object
   */
   createEditor ({ version, docJSON }) {
-    //console.log(`${this.docId}: Creating collab editor with doc version: ${version}`);
+    console.log(`${this.docId}: Creating collab editor with doc version: ${version}`);
     this.editor = new ProseMirror({
       ...this.proseMirrorOptions,
       collab: {
@@ -91,7 +91,7 @@ export default class CollabEditor {
 
   sendStepsToAuthority () {
     const data = this.collab.sendableSteps();
-    //console.log(`${this.docId}: CollabEditor sendStepsToAuthority(), data=${JSON.stringify(data, null, 2)}`);
+    console.log(`${this.docId}: CollabEditor sendStepsToAuthority(), data=${JSON.stringify(data, null, 2)}`);
     // convert to JSON so we can send it over the wire
     const stepsJSON = data.steps.map((step) => {
       return step.toJSON();
@@ -117,7 +117,7 @@ export default class CollabEditor {
         // TODO: handle error
       }
       let parsedNewData = JSON.parse(newData);
-      //console.log(`${self.docId}: CollabEditor got steps from Authority since v${self.collab.version}`);
+      console.log(`${self.docId}: CollabEditor got steps from Authority since v${self.collab.version}`);
 
       let { steps, clientIds } = parsedNewData;
       // convert steps to Step instances

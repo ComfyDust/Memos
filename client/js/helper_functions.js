@@ -32,6 +32,14 @@ Template.registerHelper('generate_tag_uri', function (new_tag) {
     return path;
 });
 
+Template.registerHelper('format_date', function(iso_date) {
+    var date_array = iso_date.toString().split(" ");
+
+    // "Mmm DD, YYYY HH:MM:SS"
+    return date_array[1] + " " + date_array[2] + ", "
+         + date_array[3] + " "+ date_array[4];
+});
+
 // Memo List helper functions
 Template.memo_list.helpers({
     // Returns title for Memo List page while setting the page's header title
@@ -105,16 +113,18 @@ Template.memo_list_tag_breadcrumbs.helpers({
 // Memo View helper functions
 Template.memo_view.helpers({
     // Set HTML header title
-    set_header_title: function(memo_name) {
+    set_header_title: function (memo_name) {
         document.title = "Memos: " + memo_name;
+    },
+    // Indicates whether the current user owns the viewed memo
+    curr_user_owns_memo: function (memo_owner_id) {
+        return memo_owner_id == Meteor.userId();
     }
 });
 
-Template.memo_view_permissions.helpers({
-    // Check whether the memo is shared with everyone
-    //shared_with_everyone: function(memo_id) {
-    //    var memo = Memos.findOne({_id: memo_id});
-    //    $("#share_with_everyone_checkbox").prop("checked", true);
-    //    return memo['shared_with_everyone'];
-    //}
+Template.memo_view_metadata.helpers({
+    // Indicates whether the current user owns the viewed memo
+    curr_user_owns_memo: function (memo_owner_id) {
+        return memo_owner_id == Meteor.userId();
+    }
 });

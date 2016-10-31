@@ -3,49 +3,64 @@
 <!-- Top level memo view template -->
 <template name="memo_view">
 	<div id="memo_view" class="container">
-		{{set_header_title memo_name}} {{> memo_view_metadata}} {{> memo_view_content_editor}}
+		{{set_header_title memo_name}} {{> memo_view_metadata}} {{> memo_view_content_editor}} {{#if curr_user_owns_memo memo_owner_id}}
+		<button type="button" class="btn btn-primary js-show-delete-memo-modal pull-right">Delete</button> {{> memo_view_delete}}
+		{{/if}}
 	</div>
 </template>
 
 <!-- Memo view - metadata bar -->
 <template name="memo_view_metadata">
-	<div id="memo_view_metadata" class="container">
+	<div class="container memo_view_metadata">
 		<div class="row">
 			<!-- Memo Name -->
-			<div class="col-md-3">
-				Memo Name: {{memo_name}}
+			<div class="col-md-12 memo_view_metadata">
+				<h1>{{memo_name}}</h1>
 			</div>
-			<!-- Owner -->
-			<div class="col-md-2">
-				Owner: {{memo_owner_email}}
-			</div>
-			<!-- Permissions button -->
-			<div class="col-md-2">
-				<button type="button" class="btn btn-primary js-show-permissions-modal">Permissions</button> {{> memo_view_permissions}}
-			</div>
-			<!-- Date Created -->
-			<div class="col-md-2">
-				Created: {{date_created}}
-			</div>
-			<!-- Tags -->
-			<div class="col-md-3">
-				Tags:
-				<!-- Existing Tags -->
-				{{#each tags}}
-				<span>{{.}},</span> {{/each}}
+		</div>
 
-				<!-- New Tags -->
+		<div class="row">
+			<!-- Owner -->
+			<div class="col-md-2 memo_view_metadata">
+				Owner:<br> {{memo_owner_email}}
+			</div>
+
+			<!-- Date Created -->
+			<div class="col-md-2 memo_view_metadata">
+				Created:<br> {{format_date date_created}}
+			</div>
+
+			{{#if curr_user_owns_memo memo_owner_id}}
+			<!-- Permissions button -->
+			<div class="col-md-2 memo_view_metadata">
+				<button type="button" class="btn btn-primary btn-sm js-show-permissions-modal">Permissions</button> {{> memo_view_permissions}}
+			</div>
+			{{else}}
+			<div class="col-md-2"></div>
+			{{/if}}
+
+			<!-- New Tag -->
+			<div class="col-md-2 memo_view_metadata">
 				<form id="tags_form">
 					<div class="form-inline">
 						<div class="form-group">
 							<label class="control-label hidden" for="new_tag">New Tag</label>
-							<input id="tag_input" class="form-control" name="new_tag" type="text" placeholder="groceries">
+							<input id="tag_input" class="form-control input-sm" name="new_tag" type="text" placeholder="groceries">
 							<input name="memo_id" type="hidden" value="{{_id}}">
-							<button type="submit" class="btn btn-primary">Add</button>
-						</div> <!--/.form-group-->
-					</div> <!--/.form-inline-->
+							<button type="submit" class="btn btn-primary btn-sm">Add Tag</button>
+						</div>
+						<!--/.form-group-->
+					</div>
+					<!--/.form-inline-->
 				</form>
 			</div>
+
+			<!-- Existing Tags -->
+			<div class="col-md-4 memo_view_metadata">
+				{{#each tags}}
+				<button class="btn btn-default btn-sm js-remove-tag"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> {{.}}</button>				{{/each}}
+			</div>
+			
 		</div>
 		<!--/.row-->
 	</div>
@@ -57,12 +72,14 @@
 	<div id="permissions_modal" class="modal fade">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
+
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
 					<h4 class="modal-title">Permissions</h4>
 				</div>
+
 				<div class="modal-body">
 					<!-- Currently shared users -->
 					<div id="permissions_emails">
@@ -78,6 +95,7 @@
 						<div class="row">
 							<div class="col-md-6">
 								{{get_email_address .}}
+								<a class="js-remove-user-share" href="#"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></a>
 							</div>
 							<div class="col-md-6">
 							</div>
@@ -119,6 +137,7 @@
 
 				</div>
 				<!-- /.modal-body -->
+
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 				</div>
@@ -130,21 +149,46 @@
 	<!-- /.modal -->
 </template>
 
-<!-- Memo view - content - Main -->
-<template name="memo_view_content">
-	<div id="memo_view_content" class="container">
-	</div>
-</template>
-
-<!-- Memo view - content - Render -->
-<template name="memo_view_content_render">
-	<div id="memo_view_content_render" class="container">
-	</div>
-</template>
-
 <!-- Memo view - content - Editor -->
 <template name="memo_view_content_editor">
 	<div id="memo_view_content_editor" class="container">
 		<div id="memo_editor"></div>
 	</div>
+</template>
+
+<!-- Memo view - delete memo modal -->
+<template name="memo_view_delete">
+	<div id="delete_memo_modal" class="modal fade">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+					<h4 class="modal-title">Delete</h4>
+				</div>
+				<!-- /.modal-header -->
+
+				<div class="modal-body">
+					Are you sure you want to delete this memo?
+				</div>
+				<!-- /.modal-body -->
+
+				<div class="modal-footer">
+					<form id="delete_memo_form">
+						<div class="form-group">
+							<input name="memo_id" type="hidden" value="{{_id}}">
+							<button type="submit" class="btn btn-primary">Delete</button>
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+						</div>
+					</form>
+				</div>
+				<!-- /.modal-footer -->
+
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
 </template>

@@ -23,7 +23,7 @@ export default class DocManager {
      */
     static get_mod_date(docId) {
         var docs       = documentsColl.find({docId: docId}).fetch();
-        var newest_ver = 0;
+        var newest_ver = -1;
         var timestamp  = 0;
 
         for (var idx = 0; idx < docs.length; idx++) {

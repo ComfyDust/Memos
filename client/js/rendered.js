@@ -1,7 +1,6 @@
 ///
 // Client - Rendered
 ///
-import { Session } from 'meteor/session';
 import { ProseMeteorEditor } from 'meteor/prosemeteor:prosemirror';
 
 // Memo List - Selection
@@ -32,19 +31,27 @@ Template.memo_view_content_editor.onRendered(function () {
         });
     }
 
+    // If no memo was found, check for a memo shared with everyone
+    if (!memo) {
+        memo = Memos.findOne({
+            memo_name: memo_name,
+            shared_with_everyone: true
+        });
+    }
+
     // If a memo still wasn't found, re-direct the user to the homepage
     if (!memo) {
         Router.go('/');
+    } else {
+        // Otherwise, render the text editor
+        let editor1 = new ProseMeteorEditor({
+            docId: memo._id,
+            proseMirrorOptions: {
+                place: document.getElementById('memo_editor'),
+                menuBar: true,
+                autoInput: true,
+                tooltipMenu: { selectedBlockMenu: true }
+            }
+        });
     }
-
-    // Otherwise, render the text editor
-    let editor1 = new ProseMeteorEditor({
-        docId: memo._id,
-        proseMirrorOptions: {
-            place: document.getElementById('memo_editor'),
-            menuBar: true,
-            autoInput: true,
-            tooltipMenu: { selectedBlockMenu: true }
-        }
-    });
 });
