@@ -3,6 +3,7 @@
 <!-- Top level memo list template -->
 <template name="memo_list">
 	<div class="container">
+		<h1 id="memo-list-title">{{get_memo_list_title}}</h1><br>
 		{{> memo_list_selection}} {{> memo_list_view}}
 	</div>
 </template>
@@ -34,7 +35,7 @@
 <!-- Memo list view - Main -->
 <template name="memo_list_view">
 	<div class="container">
-		My Memos:<br> {{> memo_list_tag_breadcrumbs}}<br>
+		{{> memo_list_tag_breadcrumbs}}<br>
 
 		{{#if show_icon_view}}
 		  {{> memo_list_view_icons}}
@@ -49,7 +50,12 @@
 <!-- Memo list view - Tag Breadcrumbs -->
 <template name="memo_list_tag_breadcrumbs">
 	<div class="container">
-		[PLACEHOLDER: Tag Breadcrumbs]
+		<ol class="breadcrumb">
+			<span id="css-pre-breadcrumb">/</span>
+			{{#each get_filtered_tags}}
+			<li class="breadcrumb-item"><a href="/{{get_curr_route}}?tags={{.}}">{{.}}</a></li>
+			{{/each}}
+		</ol>
 	</div>
 </template>
 
@@ -60,7 +66,7 @@
 		<!-- Tags -->
 		{{#each tags}}
 		<div class="col-md-2">
-			<a href="#">
+			<a href="{{generate_tag_uri .}}">
 				<center>
 					<button type="button" class="btn btn-default btn-lg">
 					  <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>
@@ -128,7 +134,7 @@
 		{{#each tags}}
 		<div class="row">
 			<div class="col-md-3">
-				<a href="#">
+				<a href="{{generate_tag_uri .}}">
 				  <button type="button" class="btn btn-default btn-sm">
 						<span class="glyphicon glyphicon-tag" aria-hidden="true"></span>
 					</button>

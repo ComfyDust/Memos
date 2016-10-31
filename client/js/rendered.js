@@ -5,17 +5,17 @@ import { Session } from 'meteor/session';
 import { ProseMeteorEditor } from 'meteor/prosemeteor:prosemirror';
 
 // Memo List - Selection
-Template.memo_list_selection.rendered = function () {
+Template.memo_list_selection.onRendered(function () {
     var view = Session.get("view");
     var sort = Session.get("sort");
 
     // Set selected view and sort options
     $('#view_selector option[value="' + view + '"]').attr("selected", "selected");
     $('#sort_selector option[value="' + sort + '"]').attr("selected", "selected");
-};
+});
 
 // Memo View - Content Editor
-Template.memo_view_content_editor.rendered = function () {
+Template.memo_view_content_editor.onRendered(function () {
     var memo_name = decodeURI(window.location.pathname.replace("/memos/", ""));
 
     // Search for a memo belonging to the current user
@@ -47,4 +47,4 @@ Template.memo_view_content_editor.rendered = function () {
             tooltipMenu: { selectedBlockMenu: true }
         }
     });
-};
+});

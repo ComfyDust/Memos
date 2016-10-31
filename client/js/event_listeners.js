@@ -41,6 +41,7 @@ Template.memo_list.events({
                 memo_name: new_memo_name,
                 memo_owner_id: user_id,
                 memo_owner_email: Meteor.users.findOne({_id: user_id}).emails[0].address,
+                shared_with_everyone: false,
                 shared_with: [],
                 tags: [],
                 date_created: new Date(),
@@ -64,50 +65,7 @@ Template.memo_list.events({
 
 // Memo View event listeners
 Template.memo_view.events({
-    'click .js-show-permissions-modal': function (event) {
-        $('#permissions_modal').modal('show');
-    },
-    'submit #permissions_form': function (event) {
-        var target = event.target;
-        event.preventDefault();
-
-        // Get memo
-        var memo = Memos.findOne({ _id: target.memo_id.value });
-        if (!memo) {
-            // User is messing with the hidden field
-            return;
-        }
-
-        // Get email address
-        var email = target.email_address.value;
-        var user = Meteor.users.findOne({ "emails.address": email });
-
-        if (!user) {
-            // If user doesn't exist, display an error
-            $("#permissions_form").addClass("has-error");
-            $("#email_help").text("User not found.");
-        } else if (user._id == Meteor.userId()) {
-            // If the user entered themself, display an error
-            $("#permissions_form").addClass("has-error");
-            $("#email_help").text("You already own this memo! =P");
-        } else if (memo.shared_with.indexOf(user._id) != -1) {
-            // If the memo is already shared with the user, display an error
-            $("#permissions_form").addClass("has-error");
-            $("#email_help")
-                .text("This memo is already shared with that user! =P");
-        } else {
-            // Upsert memo
-            memo.shared_with.push(user._id);
-            Memos.upsert({ _id: memo._id }, memo);
-
-            // Remove error and clear input
-            $("#permissions_form").removeClass("has-error");
-            $("#email_help").text("");
-            $("#email_input").val("");
-        }
-
-        return;
-    },
+    // Main memo view events
     'submit #tags_form': function (event) {
         var target = event.target;
         event.preventDefault();
@@ -133,5 +91,79 @@ Template.memo_view.events({
         }
 
         return;
+    },
+
+    // Permissions modal events
+    'click .js-show-permissions-modal': function (event) {
+        $('#permissions_modal').modal('show');
+    },
+    'hidden.bs.modal #permissions_modal': function(event) {
+        // Clear success message when the permissions modal is closed
+        $("#share_everyone_form").removeClass("has-success");
+        $("#share_everyone_help").text("");
+    },
+
+    // Permissions forms events
+    'submit #permissions_form': function (event) {
+        var target = event.target;
+        event.preventDefault();
+
+        // Get memo
+        var memo = Memos.findOne({ _id: target.memo_id.value });
+        if (!memo) {
+            // User is messing with the hidden field
+            return;
+        }
+
+        // Get email address
+        var email = target.email_address.value;
+        var user = Meteor.users.findOne({ "emails.address": email });
+
+        if (!user) {
+            // If user doesn't exist, display an error
+            $("#permissions_form").addClass("has-error");
+            $("#email_help").text("User not found.");
+        } else if (user._id == Meteor.userId()) {
+            // If the user entered themself, display an error
+            $("#permissions_form").addClass("has-error");
+            $("#email_help").text("You already own this memo!");
+        } else if (memo.shared_with.indexOf(user._id) != -1) {
+            // If the memo is already shared with the user, display an error
+            $("#permissions_form").addClass("has-error");
+            $("#email_help")
+                .text("This memo is already shared with that user!");
+        } else {
+            // Upsert memo
+            memo.shared_with.push(user._id);
+            Memos.upsert({ _id: memo._id }, memo);
+
+            // Remove error and clear input
+            $("#permissions_form").removeClass("has-error");
+            $("#email_help").text("");
+            $("#email_input").val("");
+        }
+
+        return;
+    },
+    'submit #share_everyone_form': function(event) {
+        var target     = event.target;
+        var is_checked = target.share_with_everyone_checkbox.checked;
+
+        event.preventDefault();
+
+        // Get memo
+        var memo = Memos.findOne({ _id: target.memo_id.value });
+        if (!memo) {
+            // User is messing with the hidden field
+            return;
+        }
+
+        // Upsert memo
+        memo['shared_with_everyone'] = is_checked
+        Memos.upsert({_id: target.memo_id.value}, memo);
+
+        // Indicate success
+        $("#share_everyone_form").addClass("has-success");
+        $("#share_everyone_help").text("Updated!");
     }
 });

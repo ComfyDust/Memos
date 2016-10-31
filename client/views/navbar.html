@@ -17,10 +17,10 @@
 			<!--/.navbar-header -->
 			<div id="navbar" class="collapse navbar-collapse">
 				{{#if currentUser}}
-				<ul class="nav navbar-nav">
-					<li><a href="/">My Memos</a></li>
-					<li><a href="/memos-shared-with-me">Memos Shared with Me</a></li>
-					<li><a href="/memos-shared-with-everyone">Memos Shared with Everyone</a></li>
+				<ul id="nav-list" class="nav navbar-nav">
+					<li id="nav-my-memos"><a href="/my-memos">My Memos</a></li>
+					<li id="nav-memos-shared-with-me"><a href="/memos-shared-with-me">Memos Shared with Me</a></li>
+					<li id="nav-memos-shared-with-everyone"><a href="/memos-shared-with-everyone">Memos Shared with Everyone</a></li>
 				</ul>
 				{{/if}}
 				<ul class="nav navbar-nav navbar-right">

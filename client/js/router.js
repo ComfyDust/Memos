@@ -12,20 +12,21 @@ function update_mod_dates(memos) {
     }
 }
 
-function get_unique_tags(memos) {
+function get_unique_tags(memos, excluded_tags) {
     var tags = [];
+
     for (var idx1 = 0; idx1 < memos.length; idx1++) {
         for (var idx2 = 0; idx2 < memos[idx1]['tags'].length; idx2++) {
             var tag = memos[idx1]['tags'][idx2];
 
             // If tag is not already in the tags array, add it
-            if (tags.indexOf(tag) == -1) {
+            if (tags.indexOf(tag) == -1 && excluded_tags.indexOf(tag) == -1) {
                 tags.push(tag);
             }
         }
     }
     tags.sort();
-    
+
     return tags;
 }
 
@@ -35,7 +36,15 @@ Router.configure({
 });
 
 // Routes - Top Level
-Router.route('/', {
+Router.route('/', function() {
+    if (Meteor.userId()) {
+        this.redirect('/my-memos');
+    } else {
+        this.render('home');
+    }
+});
+
+Router.route('/my-memos', {
     waitOn: function () {
         return Meteor.subscribe("memos");
     },
@@ -43,27 +52,35 @@ Router.route('/', {
         if (Meteor.userId()) {
             this.render('home', {
                 data: function () {
+                    var memo_query = {memo_owner_id: Meteor.userId()};
+                    var tag_filter = [];
+
+                    // Add tags to query if requested in GET parameters
+                    if (this.params.query['tags']) {
+                        tag_filter = this.params.query['tags'].split(",");
+                        memo_query['tags'] = {$all: tag_filter};
+                    }
+
                     // Get memos
-                    var memos = Memos.find({ memo_owner_id: Meteor.userId() }).fetch();
+                    var memos = Memos.find(memo_query).fetch();
 
                     // Update memo mod date
                     update_mod_dates(memos);
 
                     // Get unique tags from result
-                    var tags = get_unique_tags(memos);
+                    var tags = get_unique_tags(memos, tag_filter);
 
                     // Get memos with appropriate sort
                     var sort_obj = {};
                     sort_obj[Session.get("sort")] = 1;
-                    memos = Memos.find({ memo_owner_id: Meteor.userId() },
-                        { sort: sort_obj });
+                    memos = Memos.find(memo_query, { sort: sort_obj });
 
                     // Return memos and tags
                     return { memos: memos, tags: tags };
                 }
             });
         } else {
-            this.render('home');
+            this.redirect('/');
         }
     }
 });
@@ -77,20 +94,28 @@ Router.route('/memos-shared-with-me', {
         if (Meteor.userId()) {
             this.render('home', {
                 data: function () {
+                    var memo_query = {shared_with: Meteor.userId()};
+                    var tag_filter = [];
+
+                    // Add tags to query if requested in GET parameters
+                    if (this.params.query['tags']) {
+                        tag_filter = this.params.query['tags'].split(",");
+                        memo_query['tags'] = {$all: tag_filter};
+                    }
+
                     // Get memos
-                    var memos = Memos.find({ shared_with: Meteor.userId() });
+                    var memos = Memos.find(memo_query).fetch();
 
                     // Update memo mod date
                     update_mod_dates(memos);
 
                     // Get unique tags from result
-                    var tags = get_unique_tags(memos);
+                    var tags = get_unique_tags(memos, tag_filter);
 
                     // Return memos with appropriate sort
                     var sort_obj = {};
                     sort_obj[Session.get("sort")] = 1;
-                    memos = Memos.find({ shared_with: Meteor.userId() },
-                        { sort: sort_obj });
+                    memos = Memos.find(memo_query, { sort: sort_obj });
 
                     // Return memos tags
                     return { memos: memos, tags: tags };
@@ -103,11 +128,44 @@ Router.route('/memos-shared-with-me', {
 });
 
 // Rotues - /memos-shared-with-everyone
-Router.route('/memos-shared-with-everyone', function () {
-    if (Meteor.userId()) {
-        this.render('home');
-    } else {
-        this.redirect('/');
+Router.route('/memos-shared-with-everyone', {
+    waitOn: function () {
+        return Meteor.subscribe("memos");
+    },
+    action: function () {
+        if (Meteor.userId()) {
+            this.render('home', {
+                data: function () {
+                    var memo_query = {shared_with_everyone: true};
+                    var tag_filter = [];
+
+                    // Add tags to query if requested in GET parameters
+                    if (this.params.query['tags']) {
+                        tag_filter = this.params.query['tags'].split(",");
+                        memo_query['tags'] = {$all: tag_filter};
+                    }
+
+                    // Get memos
+                    var memos = Memos.find(memo_query).fetch();
+
+                    // Update memo mod date
+                    update_mod_dates(memos);
+
+                    // Get unique tags from result
+                    var tags = get_unique_tags(memos, tag_filter);
+
+                    // Return memos with appropriate sort
+                    var sort_obj = {};
+                    sort_obj[Session.get("sort")] = 1;
+                    memos = Memos.find(memo_query, { sort: sort_obj });
+
+                    // Return memos tags
+                    return { memos: memos, tags: tags };
+                }
+            });
+        } else {
+            this.redirect('/');
+        }
     }
 });
 

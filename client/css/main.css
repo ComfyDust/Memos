@@ -3,3 +3,9 @@ body {
     padding-top: 70px; /* Prevents fixed navbar from covering content */
 }
 
+/* Memo View */
+#css-pre-breadcrumb {
+    /* Formats the forward slash before the breadcrumbs */
+    padding: 0 5px;
+    color: #ccc;
+}
