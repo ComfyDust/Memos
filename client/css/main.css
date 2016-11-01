@@ -3,6 +3,12 @@ body {
     padding-top: 70px; /* Prevents fixed navbar from covering content */
 }
 
+/* Spash Page */
+.carousel-caption {
+    position: absolute;
+    height: 65%;
+}
+
 /* Memo List */
 #css-pre-breadcrumb {
     /* Formats the forward slash before the breadcrumbs */
