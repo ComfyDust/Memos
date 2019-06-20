@@ -10,7 +10,7 @@
   },
   "description": "ProseMeteor is a package integrating [ProseMirror](https://prosemirror.net/) and [Meteor.js](http://docs.meteor.com/#/full/). ProseMeteor is built for Meteor 1.3+",
   "devDependencies": {
-    "eslint": "^2.11.1 <3.0.0",
+    "eslint": ">=4.18.2",
     "eslint-config-standard": "^5.3.1",
     "eslint-plugin-import": "^1.8.1",
     "eslint-plugin-meteor": "^3.6.0",
